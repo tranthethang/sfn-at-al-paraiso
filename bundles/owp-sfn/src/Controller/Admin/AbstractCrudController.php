@@ -4,6 +4,7 @@ namespace Owp\Sfn\Controller\Admin;
 
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController as EasyCorpAbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
+use Owp\Sfn\Contract\Field\Timestampable;
 
 abstract class AbstractCrudController extends EasyCorpAbstractCrudController
 {
@@ -13,7 +14,7 @@ abstract class AbstractCrudController extends EasyCorpAbstractCrudController
 
         /** @var Field $field */
         foreach ($fields as $field) {
-            if (in_array($field->getAsDto()->getProperty(), ['createdAt', 'updatedAt'])) {
+            if (in_array($field->getAsDto()->getProperty(), [Timestampable::CREATED_AT, Timestampable::UPDATED_AT])) {
                 $field->hideOnForm()->hideOnIndex();
             }
         }
