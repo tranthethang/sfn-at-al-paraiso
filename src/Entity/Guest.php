@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Contract\Entity\IGuest;
 use App\Repository\GuestRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -36,6 +38,14 @@ class Guest implements IGuest, Identity, Timestampable
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $memberSince = null;
+
+    #[ORM\OneToMany(mappedBy: 'guest', targetEntity: Reservation::class)]
+    private Collection $reservations;
+
+    public function __construct()
+    {
+        $this->reservations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -86,6 +96,36 @@ class Guest implements IGuest, Identity, Timestampable
     public function setMemberSince(\DateTimeInterface $memberSince): self
     {
         $this->memberSince = $memberSince;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reservation>
+     */
+    public function getReservations(): Collection
+    {
+        return $this->reservations;
+    }
+
+    public function addReservation(Reservation $reservation): self
+    {
+        if (!$this->reservations->contains($reservation)) {
+            $this->reservations->add($reservation);
+            $reservation->setGuest($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation): self
+    {
+        if ($this->reservations->removeElement($reservation)) {
+            // set the owning side to null (unless already changed)
+            if ($reservation->getGuest() === $this) {
+                $reservation->setGuest(null);
+            }
+        }
 
         return $this;
     }
