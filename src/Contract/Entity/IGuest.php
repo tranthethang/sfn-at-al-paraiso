@@ -9,4 +9,6 @@ interface IGuest
     const LAST_NAME = "lastName";
 
     const MEMBER_SINCE = "memberSince";
+
+    const PHONE = "phone";
 }

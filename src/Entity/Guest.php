@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Contract\Entity\IGuest;
 use App\Repository\GuestRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Owp\Sfn\Contract\Field\Identity;
@@ -33,8 +34,8 @@ class Guest implements IGuest, Identity, Timestampable
     #[ORM\Column(length: 255)]
     private ?string $phone = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $memberSince = null;
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $memberSince = null;
 
     public function getId(): ?int
     {
@@ -77,12 +78,12 @@ class Guest implements IGuest, Identity, Timestampable
         return $this;
     }
 
-    public function getMemberSince(): ?string
+    public function getMemberSince(): ?\DateTimeInterface
     {
         return $this->memberSince;
     }
 
-    public function setMemberSince(string $memberSince): self
+    public function setMemberSince(\DateTimeInterface $memberSince): self
     {
         $this->memberSince = $memberSince;
 
