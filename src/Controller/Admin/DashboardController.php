@@ -7,6 +7,7 @@ use App\Entity\Guest;
 use App\Entity\Hotel;
 use App\Entity\Reservation;
 use App\Entity\ReservationStatusCatalog;
+use App\Entity\ReservationStatusEvent;
 use App\Entity\Room;
 use App\Entity\RoomType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -56,5 +57,6 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Room', 'fas fa-campground', Room::class);
         yield MenuItem::linkToCrud('Reservation', 'fas fa-check-to-slot', Reservation::class);
         yield MenuItem::linkToCrud('Reservation Status', 'fas fa-toggle-off', ReservationStatusCatalog::class);
+        yield MenuItem::linkToCrud('Reservation Event', 'fas fa-calendar', ReservationStatusEvent::class);
     }
 }

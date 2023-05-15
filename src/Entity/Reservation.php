@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Contract\Entity\IReservation;
 use App\Repository\ReservationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -14,6 +16,11 @@ use Owp\Sfn\Contract\Field\Timestampable;
 class Reservation implements IReservation, Identity, Timestampable
 {
     use TimestampableEntity;
+
+    public function __toString(): string
+    {
+        return sprintf("%s (%s-%s)", $this->getGuest(), $this->getStartDate()->format('d/m/Y'), $this->getEndDate()->format('d/m/Y'));
+    }
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -34,6 +41,14 @@ class Reservation implements IReservation, Identity, Timestampable
 
     #[ORM\Column(nullable: true)]
     private ?float $totalPrice = null;
+
+    #[ORM\OneToMany(mappedBy: 'reservation', targetEntity: ReservationStatusEvent::class)]
+    private Collection $reservationStatusEvents;
+
+    public function __construct()
+    {
+        $this->reservationStatusEvents = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -96,6 +111,36 @@ class Reservation implements IReservation, Identity, Timestampable
     public function setTotalPrice(?float $totalPrice): self
     {
         $this->totalPrice = $totalPrice;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ReservationStatusEvent>
+     */
+    public function getReservationStatusEvents(): Collection
+    {
+        return $this->reservationStatusEvents;
+    }
+
+    public function addReservationStatusEvent(ReservationStatusEvent $reservationStatusEvent): self
+    {
+        if (!$this->reservationStatusEvents->contains($reservationStatusEvent)) {
+            $this->reservationStatusEvents->add($reservationStatusEvent);
+            $reservationStatusEvent->setReservation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservationStatusEvent(ReservationStatusEvent $reservationStatusEvent): self
+    {
+        if ($this->reservationStatusEvents->removeElement($reservationStatusEvent)) {
+            // set the owning side to null (unless already changed)
+            if ($reservationStatusEvent->getReservation() === $this) {
+                $reservationStatusEvent->setReservation(null);
+            }
+        }
 
         return $this;
     }
