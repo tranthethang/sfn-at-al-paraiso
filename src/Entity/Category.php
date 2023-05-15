@@ -2,20 +2,28 @@
 
 namespace App\Entity;
 
+use App\Contract\Entity\ICategory;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Owp\Sfn\Contract\Field\Identity;
+use Owp\Sfn\Contract\Field\Timestampable;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
-class Category
+class Category implements ICategory, Identity, Timestampable
 {
     /**
      * Hook timestampable behavior
      * updates createdAt, updatedAt fields
      */
     use TimestampableEntity;
+
+    public function __toString(): string
+    {
+        return $this->getCategoryName();
+    }
 
     #[ORM\Id]
     #[ORM\GeneratedValue]

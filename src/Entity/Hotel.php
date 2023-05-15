@@ -2,12 +2,17 @@
 
 namespace App\Entity;
 
+use App\Contract\Entity\IHotel;
 use App\Repository\HotelRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Timestampable;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Owp\Sfn\Contract\Field\ActiveState;
+use Owp\Sfn\Contract\Field\Description;
+use Owp\Sfn\Contract\Field\Identity;
 
 #[ORM\Entity(repositoryClass: HotelRepository::class)]
-class Hotel
+class Hotel implements IHotel, Identity, Description, ActiveState, Timestampable
 {
     /**
      * Hook timestampable behavior
@@ -27,7 +32,7 @@ class Hotel
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'hotels')]
-    private ?Category $categoryId = null;
+    private ?Category $category = null;
 
     #[ORM\Column]
     private ?bool $isActive = null;
@@ -61,14 +66,14 @@ class Hotel
         return $this;
     }
 
-    public function getCategoryId(): ?Category
+    public function getCategory(): ?Category
     {
-        return $this->categoryId;
+        return $this->category;
     }
 
-    public function setCategoryId(?Category $categoryId): self
+    public function setCategory(?Category $category): self
     {
-        $this->categoryId = $categoryId;
+        $this->category = $category;
 
         return $this;
     }
