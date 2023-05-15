@@ -12,11 +12,14 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Owp\Sfn\Contract\Field\ActiveState;
 use Owp\Sfn\Contract\Field\Description;
 use Owp\Sfn\Contract\Field\Identity;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Owp\Sfn\Trait\SlugableEntity;
 
 #[ORM\Entity(repositoryClass: HotelRepository::class)]
 class Hotel implements IHotel, Identity, Description, ActiveState, Timestampable
 {
     use TimestampableEntity;
+    use SlugableEntity;
 
     public function __toString(): string
     {
@@ -29,7 +32,7 @@ class Hotel implements IHotel, Identity, Description, ActiveState, Timestampable
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $hotel_name = null;
+    private ?string $hotelName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
@@ -43,6 +46,10 @@ class Hotel implements IHotel, Identity, Description, ActiveState, Timestampable
     #[ORM\OneToMany(mappedBy: 'hotel', targetEntity: Room::class)]
     private Collection $rooms;
 
+    #[ORM\Column(length: 255, unique: true)]
+    #[Gedmo\Slug(fields: ['hotelName'])]
+    private ?string $slug = null;
+
     public function __construct()
     {
         $this->rooms = new ArrayCollection();
@@ -55,12 +62,12 @@ class Hotel implements IHotel, Identity, Description, ActiveState, Timestampable
 
     public function getHotelName(): ?string
     {
-        return $this->hotel_name;
+        return $this->hotelName;
     }
 
-    public function setHotelName(string $hotel_name): self
+    public function setHotelName(string $hotelName): self
     {
-        $this->hotel_name = $hotel_name;
+        $this->hotelName = $hotelName;
 
         return $this;
     }
