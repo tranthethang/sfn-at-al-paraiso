@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Category;
+use App\Entity\Guest;
 use App\Entity\Hotel;
 use App\Entity\Room;
 use App\Entity\RoomType;
@@ -18,10 +19,10 @@ class DashboardController extends AbstractDashboardController
     #[Route('/admin', name: 'admin')]
     public function index(): Response
     {
-        $routeBuilder = $this->container->get(AdminUrlGenerator::class);
-        $url = $routeBuilder->setController(CategoryCrudController::class)->generateUrl();
-
-        return $this->redirect($url);
+//        $routeBuilder = $this->container->get(AdminUrlGenerator::class);
+//        $url = $routeBuilder->setController(CategoryCrudController::class)->generateUrl();
+//
+//        return $this->redirect($url);
 
         // return parent::index();
 
@@ -39,7 +40,7 @@ class DashboardController extends AbstractDashboardController
         // Option 3. You can render some custom template to display a proper dashboard with widgets, etc.
         // (tip: it's easier if your template extends from @EasyAdmin/page/content.html.twig)
         //
-        // return $this->render('some/path/my-dashboard.html.twig');
+         return $this->render('/admin/dashboard/index.html.twig');
     }
 
     public function configureDashboard(): Dashboard
@@ -50,7 +51,8 @@ class DashboardController extends AbstractDashboardController
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
+        yield MenuItem::linkToDashboard('Dashboard', 'fas fa-home');
+        yield MenuItem::linkToCrud('Guest', 'fas fa-users', Guest::class);
         yield MenuItem::linkToCrud('Category', 'fas fa-layer-group', Category::class);
         yield MenuItem::linkToCrud('Hotel', 'fas fa-hotel', Hotel::class);
         yield MenuItem::linkToCrud('Room Type', 'fas fa-campground', RoomType::class);
