@@ -22,6 +22,11 @@ class Hotel implements IHotel, Identity, Description, ActiveState, Timestampable
      */
     use TimestampableEntity;
 
+    public function __toString(): string
+    {
+        return $this->getHotelName();
+    }
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

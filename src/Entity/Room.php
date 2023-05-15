@@ -2,11 +2,15 @@
 
 namespace App\Entity;
 
+use App\Contract\Entity\IRoom;
 use App\Repository\RoomRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Owp\Sfn\Contract\Field\Description;
+use Owp\Sfn\Contract\Field\Identity;
+use Owp\Sfn\Contract\Field\Timestampable;
 
 #[ORM\Entity(repositoryClass: RoomRepository::class)]
-class Room
+class Room implements IRoom, Identity, Description, Timestampable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

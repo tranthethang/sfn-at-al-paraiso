@@ -16,6 +16,11 @@ class RoomType implements IRoomType, Identity, Timestampable
 {
     use TimestampableEntity;
 
+    public function __toString(): string
+    {
+        return $this->getTypeName();
+    }
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

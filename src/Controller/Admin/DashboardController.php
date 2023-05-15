@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Category;
 use App\Entity\Hotel;
+use App\Entity\Room;
 use App\Entity\RoomType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -53,5 +54,6 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Category', 'fas fa-layer-group', Category::class);
         yield MenuItem::linkToCrud('Hotel', 'fas fa-hotel', Hotel::class);
         yield MenuItem::linkToCrud('Room Type', 'fas fa-campground', RoomType::class);
+        yield MenuItem::linkToCrud('Room', 'fas fa-campground', Room::class);
     }
 }
