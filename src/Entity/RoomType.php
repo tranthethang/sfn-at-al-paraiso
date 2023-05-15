@@ -10,11 +10,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Owp\Sfn\Contract\Field\Identity;
 use Owp\Sfn\Contract\Field\Timestampable;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Owp\Sfn\Trait\SlugableEntity;
 
 #[ORM\Entity(repositoryClass: RoomTypeRepository::class)]
 class RoomType implements IRoomType, Identity, Timestampable
 {
     use TimestampableEntity;
+    use SlugableEntity;
 
     public function __toString(): string
     {
@@ -27,10 +30,14 @@ class RoomType implements IRoomType, Identity, Timestampable
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $type_name = null;
+    private ?string $typeName = null;
 
     #[ORM\OneToMany(mappedBy: 'roomType', targetEntity: Room::class)]
     private Collection $rooms;
+
+    #[ORM\Column(length: 255, unique: true)]
+    #[Gedmo\Slug(fields: ['typeName'])]
+    private ?string $slug = null;
 
     public function __construct()
     {
@@ -44,12 +51,12 @@ class RoomType implements IRoomType, Identity, Timestampable
 
     public function getTypeName(): ?string
     {
-        return $this->type_name;
+        return $this->typeName;
     }
 
-    public function setTypeName(string $type_name): self
+    public function setTypeName(string $typeName): self
     {
-        $this->type_name = $type_name;
+        $this->typeName = $typeName;
 
         return $this;
     }
