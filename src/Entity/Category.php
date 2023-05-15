@@ -10,11 +10,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Owp\Sfn\Contract\Field\Identity;
 use Owp\Sfn\Contract\Field\Timestampable;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Owp\Sfn\Trait\SlugableEntity;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 class Category implements ICategory, Identity, Timestampable
 {
     use TimestampableEntity;
+    use SlugableEntity;
 
     public function __toString(): string
     {
@@ -31,6 +34,10 @@ class Category implements ICategory, Identity, Timestampable
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Hotel::class)]
     private Collection $hotels;
+
+    #[ORM\Column(length: 255, unique: true)]
+    #[Gedmo\Slug(fields: ['categoryName'])]
+    private ?string $slug = null;
 
     public function __construct()
     {

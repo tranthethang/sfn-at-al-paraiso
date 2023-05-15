@@ -21,6 +21,10 @@ class Channel
     #[ORM\Column(length: 255)]
     private ?string $channelName = null;
 
+    #[ORM\Column(length: 255, unique: true)]
+    #[Gedmo\Slug(fields: ['categoryName'])]
+    private ?string $slug = null;
+
     #[ORM\OneToMany(mappedBy: 'channel', targetEntity: ChannelUsed::class)]
     private Collection $channelUseds;
 
