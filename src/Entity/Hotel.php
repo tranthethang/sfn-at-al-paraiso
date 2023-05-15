@@ -16,10 +16,6 @@ use Owp\Sfn\Contract\Field\Identity;
 #[ORM\Entity(repositoryClass: HotelRepository::class)]
 class Hotel implements IHotel, Identity, Description, ActiveState, Timestampable
 {
-    /**
-     * Hook timestampable behavior
-     * updates createdAt, updatedAt fields
-     */
     use TimestampableEntity;
 
     public function __toString(): string

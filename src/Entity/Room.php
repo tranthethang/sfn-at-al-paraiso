@@ -4,7 +4,10 @@ namespace App\Entity;
 
 use App\Contract\Entity\IRoom;
 use App\Repository\RoomRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Owp\Sfn\Contract\Field\Description;
 use Owp\Sfn\Contract\Field\Identity;
 use Owp\Sfn\Contract\Field\Timestampable;
@@ -12,6 +15,8 @@ use Owp\Sfn\Contract\Field\Timestampable;
 #[ORM\Entity(repositoryClass: RoomRepository::class)]
 class Room implements IRoom, Identity, Description, Timestampable
 {
+    use TimestampableEntity;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -31,6 +36,18 @@ class Room implements IRoom, Identity, Description, Timestampable
 
     #[ORM\Column]
     private ?int $currentPrice = null;
+
+    #[ORM\OneToMany(mappedBy: 'room', targetEntity: ChannelUsed::class)]
+    private Collection $channelUseds;
+
+    #[ORM\OneToMany(mappedBy: 'room', targetEntity: RoomReserved::class)]
+    private Collection $roomReserveds;
+
+    public function __construct()
+    {
+        $this->channelUseds = new ArrayCollection();
+        $this->roomReserveds = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -93,6 +110,66 @@ class Room implements IRoom, Identity, Description, Timestampable
     public function setCurrentPrice(int $currentPrice): self
     {
         $this->currentPrice = $currentPrice;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ChannelUsed>
+     */
+    public function getChannelUseds(): Collection
+    {
+        return $this->channelUseds;
+    }
+
+    public function addChannelUsed(ChannelUsed $channelUsed): self
+    {
+        if (!$this->channelUseds->contains($channelUsed)) {
+            $this->channelUseds->add($channelUsed);
+            $channelUsed->setRoom($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChannelUsed(ChannelUsed $channelUsed): self
+    {
+        if ($this->channelUseds->removeElement($channelUsed)) {
+            // set the owning side to null (unless already changed)
+            if ($channelUsed->getRoom() === $this) {
+                $channelUsed->setRoom(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RoomReserved>
+     */
+    public function getRoomReserveds(): Collection
+    {
+        return $this->roomReserveds;
+    }
+
+    public function addRoomReserved(RoomReserved $roomReserved): self
+    {
+        if (!$this->roomReserveds->contains($roomReserved)) {
+            $this->roomReserveds->add($roomReserved);
+            $roomReserved->setRoom($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRoomReserved(RoomReserved $roomReserved): self
+    {
+        if ($this->roomReserveds->removeElement($roomReserved)) {
+            // set the owning side to null (unless already changed)
+            if ($roomReserved->getRoom() === $this) {
+                $roomReserved->setRoom(null);
+            }
+        }
 
         return $this;
     }

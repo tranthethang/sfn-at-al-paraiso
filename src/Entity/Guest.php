@@ -42,9 +42,13 @@ class Guest implements IGuest, Identity, Timestampable
     #[ORM\OneToMany(mappedBy: 'guest', targetEntity: Reservation::class)]
     private Collection $reservations;
 
+    #[ORM\OneToMany(mappedBy: 'guest', targetEntity: InvoiceGuest::class)]
+    private Collection $invoiceGuests;
+
     public function __construct()
     {
         $this->reservations = new ArrayCollection();
+        $this->invoiceGuests = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -124,6 +128,36 @@ class Guest implements IGuest, Identity, Timestampable
             // set the owning side to null (unless already changed)
             if ($reservation->getGuest() === $this) {
                 $reservation->setGuest(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, InvoiceGuest>
+     */
+    public function getInvoiceGuests(): Collection
+    {
+        return $this->invoiceGuests;
+    }
+
+    public function addInvoiceGuest(InvoiceGuest $invoiceGuest): self
+    {
+        if (!$this->invoiceGuests->contains($invoiceGuest)) {
+            $this->invoiceGuests->add($invoiceGuest);
+            $invoiceGuest->setGuest($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInvoiceGuest(InvoiceGuest $invoiceGuest): self
+    {
+        if ($this->invoiceGuests->removeElement($invoiceGuest)) {
+            // set the owning side to null (unless already changed)
+            if ($invoiceGuest->getGuest() === $this) {
+                $invoiceGuest->setGuest(null);
             }
         }
 

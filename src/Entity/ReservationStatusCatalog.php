@@ -30,14 +30,14 @@ class ReservationStatusCatalog implements IReservationStatusCatalog, Identity, T
     private ?string $statusName = null;
 
     #[ORM\OneToMany(mappedBy: 'reservationStatusCatalog', targetEntity: ReservationStatusEvent::class)]
-    private Collection $description;
+    private Collection $reservationStatusCatalog;
 
     #[ORM\OneToMany(mappedBy: 'reservationStatusCatalog', targetEntity: ReservationStatusEvent::class)]
     private Collection $reservationStatusEvents;
 
     public function __construct()
     {
-        $this->description = new ArrayCollection();
+        $this->reservationStatusCatalog = new ArrayCollection();
         $this->reservationStatusEvents = new ArrayCollection();
     }
 
@@ -61,15 +61,15 @@ class ReservationStatusCatalog implements IReservationStatusCatalog, Identity, T
     /**
      * @return Collection<int, ReservationStatusEvent>
      */
-    public function getDescription(): Collection
+    public function getReservationStatusCatalog(): Collection
     {
-        return $this->description;
+        return $this->reservationStatusCatalog;
     }
 
     public function addDescription(ReservationStatusEvent $description): self
     {
-        if (!$this->description->contains($description)) {
-            $this->description->add($description);
+        if (!$this->reservationStatusCatalog->contains($description)) {
+            $this->reservationStatusCatalog->add($description);
             $description->setReservationStatusCatalog($this);
         }
 
@@ -78,7 +78,7 @@ class ReservationStatusCatalog implements IReservationStatusCatalog, Identity, T
 
     public function removeDescription(ReservationStatusEvent $description): self
     {
-        if ($this->description->removeElement($description)) {
+        if ($this->reservationStatusCatalog->removeElement($description)) {
             // set the owning side to null (unless already changed)
             if ($description->getReservationStatusCatalog() === $this) {
                 $description->setReservationStatusCatalog(null);

@@ -27,7 +27,7 @@ class ReservationStatusEvent implements IReservationStatusEvent, Identity, Descr
     #[ORM\ManyToOne(inversedBy: 'reservationStatusEvents')]
     private ?ReservationStatusCatalog $reservationStatusCatalog = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
     public function getId(): ?int

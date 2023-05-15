@@ -14,10 +14,6 @@ use Owp\Sfn\Contract\Field\Timestampable;
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 class Category implements ICategory, Identity, Timestampable
 {
-    /**
-     * Hook timestampable behavior
-     * updates createdAt, updatedAt fields
-     */
     use TimestampableEntity;
 
     public function __toString(): string
@@ -33,7 +29,7 @@ class Category implements ICategory, Identity, Timestampable
     #[ORM\Column(length: 255)]
     private ?string $categoryName = null;
 
-    #[ORM\OneToMany(mappedBy: 'categoryId', targetEntity: Hotel::class)]
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Hotel::class)]
     private Collection $hotels;
 
     public function __construct()
@@ -70,7 +66,7 @@ class Category implements ICategory, Identity, Timestampable
     {
         if (!$this->hotels->contains($hotel)) {
             $this->hotels->add($hotel);
-            $hotel->setCategoryId($this);
+            $hotel->setCategory($this);
         }
 
         return $this;
@@ -80,8 +76,8 @@ class Category implements ICategory, Identity, Timestampable
     {
         if ($this->hotels->removeElement($hotel)) {
             // set the owning side to null (unless already changed)
-            if ($hotel->getCategoryId() === $this) {
-                $hotel->setCategoryId(null);
+            if ($hotel->getCategory() === $this) {
+                $hotel->setCategory(null);
             }
         }
 

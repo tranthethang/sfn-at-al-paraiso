@@ -45,9 +45,21 @@ class Reservation implements IReservation, Identity, Timestampable
     #[ORM\OneToMany(mappedBy: 'reservation', targetEntity: ReservationStatusEvent::class)]
     private Collection $reservationStatusEvents;
 
+    #[ORM\OneToMany(mappedBy: 'reservation', targetEntity: Synchronization::class)]
+    private Collection $synchronizations;
+
+    #[ORM\OneToMany(mappedBy: 'reservation', targetEntity: RoomReserved::class)]
+    private Collection $roomReserveds;
+
+    #[ORM\OneToMany(mappedBy: 'reservation', targetEntity: InvoiceGuest::class)]
+    private Collection $invoiceGuests;
+
     public function __construct()
     {
         $this->reservationStatusEvents = new ArrayCollection();
+        $this->synchronizations = new ArrayCollection();
+        $this->roomReserveds = new ArrayCollection();
+        $this->invoiceGuests = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -139,6 +151,96 @@ class Reservation implements IReservation, Identity, Timestampable
             // set the owning side to null (unless already changed)
             if ($reservationStatusEvent->getReservation() === $this) {
                 $reservationStatusEvent->setReservation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Synchronization>
+     */
+    public function getSynchronizations(): Collection
+    {
+        return $this->synchronizations;
+    }
+
+    public function addSynchronization(Synchronization $synchronization): self
+    {
+        if (!$this->synchronizations->contains($synchronization)) {
+            $this->synchronizations->add($synchronization);
+            $synchronization->setReservation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSynchronization(Synchronization $synchronization): self
+    {
+        if ($this->synchronizations->removeElement($synchronization)) {
+            // set the owning side to null (unless already changed)
+            if ($synchronization->getReservation() === $this) {
+                $synchronization->setReservation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RoomReserved>
+     */
+    public function getRoomReserveds(): Collection
+    {
+        return $this->roomReserveds;
+    }
+
+    public function addRoomReserved(RoomReserved $roomReserved): self
+    {
+        if (!$this->roomReserveds->contains($roomReserved)) {
+            $this->roomReserveds->add($roomReserved);
+            $roomReserved->setReservation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRoomReserved(RoomReserved $roomReserved): self
+    {
+        if ($this->roomReserveds->removeElement($roomReserved)) {
+            // set the owning side to null (unless already changed)
+            if ($roomReserved->getReservation() === $this) {
+                $roomReserved->setReservation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, InvoiceGuest>
+     */
+    public function getInvoiceGuests(): Collection
+    {
+        return $this->invoiceGuests;
+    }
+
+    public function addInvoiceGuest(InvoiceGuest $invoiceGuest): self
+    {
+        if (!$this->invoiceGuests->contains($invoiceGuest)) {
+            $this->invoiceGuests->add($invoiceGuest);
+            $invoiceGuest->setReservation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInvoiceGuest(InvoiceGuest $invoiceGuest): self
+    {
+        if ($this->invoiceGuests->removeElement($invoiceGuest)) {
+            // set the owning side to null (unless already changed)
+            if ($invoiceGuest->getReservation() === $this) {
+                $invoiceGuest->setReservation(null);
             }
         }
 
