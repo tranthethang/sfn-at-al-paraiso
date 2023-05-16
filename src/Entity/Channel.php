@@ -16,6 +16,11 @@ class Channel
     use TimestampableEntity;
     use SlugableEntity;
 
+    public function __toString(): string
+    {
+        return $this->getChannelName();
+    }
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

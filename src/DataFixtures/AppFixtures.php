@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Category;
+use App\Entity\RoomType;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -15,6 +16,7 @@ class AppFixtures extends Fixture
         // $manager->flush();
 
         $this->_loadCategory($manager);
+        $this->_loadRoomType($manager);
     }
 
     private function _loadCategory(ObjectManager $manager): void
@@ -29,7 +31,7 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
 
-    private function _getCategoryData()
+    private function _getCategoryData(): array
     {
         // $data = [$categoryName];
         return [
@@ -54,6 +56,36 @@ class AppFixtures extends Fixture
             ['Heritage hotels'],
             ['Hostels'],
             ['Unique concept hotels'],
+        ];
+    }
+
+    private function _loadRoomType(ObjectManager $manager): void
+    {
+        foreach ($this->_getRoomTypeData() as [$typeName, $description]) {
+            $roomType = new RoomType();
+            $roomType->setTypeName($typeName);
+            $roomType->setDescription($description);
+
+            $manager->persist($roomType);
+        }
+
+        $manager->flush();
+    }
+
+    private function _getRoomTypeData(): array
+    {
+        // $data = [$typeName, $description];
+        return [
+            ["Single", "A room assigned to one person. May have one or more beds."],
+            ["Double", "A room assigned to two people. May have one or more beds."],
+            ["Triple", "A room that can accommodate three persons and has been fitted with three twin beds, one double bed and one twin bed or two double beds."],
+            ["Quad", "A room assigned to four people. May have two or more beds."],
+            ["Queen", "A room with a queen-sized bed. May be occupied by one or more people."],
+            ["King", "A room with a king-sized bed. May be occupied by one or more people."],
+            ["Twin", "A room with two twin beds. May be occupied by one or more people."],
+            ["Hollywood Twin Room", "A room that can accommodate two persons with two twin beds joined together by a common headboard. Most of the budget hotels tend to provide many of these room settings which cater both couples and parties in two."],
+            ["Double-double", "A Room with two double ( or perhaps queen) beds. And can accommodate two to four persons with two twin, double or queen-size beds."],
+            ["Studio", "A room with a studio bed- a couch which can be converted into a bed. May also have an additional bed."],
         ];
     }
 }

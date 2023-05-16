@@ -6,16 +6,20 @@ use App\Contract\Entity\IRoom;
 use App\Repository\RoomRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Owp\Sfn\Contract\Field\Description;
 use Owp\Sfn\Contract\Field\Identity;
 use Owp\Sfn\Contract\Field\Timestampable;
+use Owp\Sfn\Trait\SlugableEntity;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: RoomRepository::class)]
 class Room implements IRoom, Identity, Description, Timestampable
 {
     use TimestampableEntity;
+    use SlugableEntity;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -25,7 +29,7 @@ class Room implements IRoom, Identity, Description, Timestampable
     #[ORM\Column(length: 255)]
     private ?string $roomName = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'rooms')]
@@ -42,6 +46,10 @@ class Room implements IRoom, Identity, Description, Timestampable
 
     #[ORM\OneToMany(mappedBy: 'room', targetEntity: RoomReserved::class)]
     private Collection $roomReserveds;
+
+    #[ORM\Column(length: 255, unique: true)]
+    #[Gedmo\Slug(fields: ['roomName'])]
+    private ?string $slug = null;
 
     public function __construct()
     {
