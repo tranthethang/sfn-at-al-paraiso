@@ -45,6 +45,12 @@ class Guest implements IGuest, Identity, Timestampable
     #[ORM\OneToMany(mappedBy: 'guest', targetEntity: InvoiceGuest::class)]
     private Collection $invoiceGuests;
 
+    #[ORM\Column(length: 12, nullable: true)]
+    private ?string $citizenIdentityCard = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $permanentAddress = null;
+
     public function __construct()
     {
         $this->reservations = new ArrayCollection();
@@ -160,6 +166,30 @@ class Guest implements IGuest, Identity, Timestampable
                 $invoiceGuest->setGuest(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCitizenIdentityCard(): ?string
+    {
+        return $this->citizenIdentityCard;
+    }
+
+    public function setCitizenIdentityCard(?string $citizenIdentityCard): self
+    {
+        $this->citizenIdentityCard = $citizenIdentityCard;
+
+        return $this;
+    }
+
+    public function getPermanentAddress(): ?string
+    {
+        return $this->permanentAddress;
+    }
+
+    public function setPermanentAddress(?string $permanentAddress): self
+    {
+        $this->permanentAddress = $permanentAddress;
 
         return $this;
     }

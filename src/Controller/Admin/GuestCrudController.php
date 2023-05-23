@@ -21,5 +21,7 @@ class GuestCrudController extends AbstractCrudController
         yield TextField::new(Guest::LAST_NAME);
         yield TelephoneField::new(Guest::PHONE);
         yield DateField::new(Guest::MEMBER_SINCE);
+        yield TextField::new(Guest::CITIZEN_IDENTITY_CARD);
+        yield TextField::new(Guest::PERMANENT_ADDRESS)->hideOnIndex();
     }
 }
